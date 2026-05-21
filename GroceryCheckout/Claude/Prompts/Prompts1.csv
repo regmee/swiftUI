@@ -6,3 +6,10 @@ Follow @Claude/CLAUDE.md for architecture and conventions, and
 
 Generate files in the order specified in SKILL.md. Stop after each file
 and let me review before continuing. Run the output checklist at the end."
+2026-05-21 15:57,AR,"Implement the feature defined in @Claude/Specs/Features/Products/products.md
+
+Follow @Claude/CLAUDE.md for architecture and conventions, and
+@Claude/Skills/SKILL.md for code templates.
+
+Generate files in the order specified in SKILL.md. Stop after each file
+and let me review before continuing. Run the output checklist at the end."

@@ -11,7 +11,12 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        CounterView()
+        TabView {
+            CounterView()
+                .tabItem { Label("Counter", systemImage: "number.circle") }
+            ProductsListView()
+                .tabItem { Label("Products", systemImage: "cart") }
+        }
     }
 }
 
