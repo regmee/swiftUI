@@ -1,3 +1,10 @@
+//  ProductsListViewModelTests.swift
+//  GroceryCheckout
+//
+//  Created by AR on 2026-05-21.
+//  Copyright © 2026 AR. All rights reserved.
+//
+
 import Testing
 import Foundation
 @testable import GroceryCheckout

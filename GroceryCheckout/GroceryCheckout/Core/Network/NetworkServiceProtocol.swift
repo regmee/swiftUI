@@ -1,3 +1,10 @@
+//  NetworkServiceProtocol.swift
+//  GroceryCheckout
+//
+//  Created by AR on 2026-05-21.
+//  Copyright © 2026 AR. All rights reserved.
+//
+
 import Foundation
 
 /// Contract for fetching and decoding a Decodable value from a remote URL.
