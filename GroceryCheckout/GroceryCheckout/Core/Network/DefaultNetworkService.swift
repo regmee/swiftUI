@@ -20,8 +20,14 @@ final class DefaultNetworkService: NetworkServiceProtocol {
     func fetch<T: Decodable>(from url: URL) async throws -> T {
         let data: Data
         do {
-            let (rawData, _) = try await session.data(from: url)
+            let (rawData, response) = try await session.data(from: url)
+            if let http = response as? HTTPURLResponse {
+                if (400...499).contains(http.statusCode) { throw NetworkError.clientError(http.statusCode) }
+                if (500...599).contains(http.statusCode) { throw NetworkError.serverError(http.statusCode) }
+            }
             data = rawData
+        } catch let error as NetworkError {
+            throw error
         } catch {
             throw NetworkError.networkFailure(error)
         }

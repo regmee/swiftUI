@@ -40,6 +40,10 @@ final class ProductsListViewModel {
             switch error {
             case .networkFailure:
                 errorMessage = "Could not connect to the server. Please check your connection."
+            case .clientError(let code):
+                errorMessage = "Request failed (error \(code)). Please try again."
+            case .serverError(let code):
+                errorMessage = "The server encountered an error (\(code)). Please try again later."
             case .decodingFailure:
                 errorMessage = "Received unexpected data from the server. Please try again later."
             }
