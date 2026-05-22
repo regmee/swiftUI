@@ -164,3 +164,11 @@ appending and rollover.
 - Do not cross-import between sibling features (Counter ↔ Favs, etc.).
 - Do not write code that isn't covered by either a spec or an explicit request.
 - Do not skip the prompt log for feature-implementation prompts.
+
+## Swift formatting
+
+- Use Apple's `swift-format` from the Xcode toolchain.
+- Config: `.swift-format` in the repo root.
+- Local devs run formatting via the git `pre-commit` hook.
+- Claude: when generating Swift, match the style produced by this formatter and
+  suggest running `swift-format` rather than hand-formatting entire files.

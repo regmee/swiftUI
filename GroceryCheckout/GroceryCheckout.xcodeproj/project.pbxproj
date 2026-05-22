@@ -50,6 +50,16 @@
 			path = Claude;
 			sourceTree = "<group>";
 		};
+		3ABB83B32FC0DEA700B730D3 /* Swift-Format */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Swift-Format";
+			sourceTree = "<group>";
+		};
+		3ABB83B72FC0E0C300B730D3 /* Scripts */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Scripts;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +90,8 @@
 		3ABB820A2FBE951600B730D3 = {
 			isa = PBXGroup;
 			children = (
+				3ABB83B72FC0E0C300B730D3 /* Scripts */,
+				3ABB83B32FC0DEA700B730D3 /* Swift-Format */,
 				3ABB834B2FBF5A6600B730D3 /* Claude */,
 				3ABB82152FBE951600B730D3 /* GroceryCheckout */,
 				3ABB82232FBE951800B730D3 /* GroceryCheckoutTests */,
@@ -116,6 +128,8 @@
 			fileSystemSynchronizedGroups = (
 				3ABB82152FBE951600B730D3 /* GroceryCheckout */,
 				3ABB834B2FBF5A6600B730D3 /* Claude */,
+				3ABB83B32FC0DEA700B730D3 /* Swift-Format */,
+				3ABB83B72FC0E0C300B730D3 /* Scripts */,
 			);
 			name = GroceryCheckout;
 			packageProductDependencies = (
