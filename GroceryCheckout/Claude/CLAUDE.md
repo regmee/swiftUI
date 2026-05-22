@@ -62,6 +62,11 @@ GroceryCheckout/                          (repo root)
 
 ## Concurrency rules
 
+- **Project uses Swift 6 language mode** (set in Build Settings → Swift Language
+  Version → Swift 6, for app + test + UITest targets). All generated code MUST
+  compile under strict concurrency checking — no data races, no implicit
+  global-actor violations. Treat every Sendable and actor-isolation warning as
+  an error to fix, not ignore.
 - **ViewModels are `@MainActor`.** They drive UI updates which must happen on
   the main thread. Mark every ViewModel class `@MainActor`.
 - **Services are NOT `@MainActor`** by default. They run off the main thread

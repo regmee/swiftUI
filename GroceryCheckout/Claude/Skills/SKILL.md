@@ -131,6 +131,11 @@ Rules:
 - Service is NOT `@MainActor`. It runs off-main so I/O does not block the UI.
 - If the service holds shared mutable state (cache, in-flight requests), make
   it an `actor` instead of a `final class` — see Actor template below.
+- The underscore form `_viewModel` is ONLY permitted inside `init`, where it is
+  required to assign the State wrapper: `_viewModel = State(initialValue: viewModel)`.
+  Everywhere else (in `body` and methods) always use `viewModel`, never `_viewModel`.
+- Prefer the no-init form when the View doesn't need an injected ViewModel:
+  `@State private var viewModel = <Name>ViewModel()` — this avoids the underscore entirely.
 
 ## Actor template (use when there is shared mutable state)
 
