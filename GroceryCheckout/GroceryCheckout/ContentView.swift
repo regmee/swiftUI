@@ -15,6 +15,8 @@ struct ContentView: View {
                 .tabItem { Label("Counter", systemImage: "number.circle") }
             ProductsListView()
                 .tabItem { Label("Products", systemImage: "cart") }
+            ProductsSearchView()
+                .tabItem { Label("Searchi", systemImage: "star") }
         }
     }
 }
