@@ -44,9 +44,13 @@ struct ProductsListRowView: View {
                     .lineLimit(2)
 
                 HStack(spacing: 12) {
-                    Label(product.category, systemImage: "tag")
+                    //Label(product.category, systemImage: "tag")
                     Label(String(format: "%.1f", product.rating), systemImage: "star.fill")
                     Label("\(product.stock)", systemImage: "shippingbox")
+                    Label(
+                        String(format: "%.2f", product.price),
+                        systemImage: "dollarsign.circle"
+                    )
                 }
                 .font(.caption2)
                 .foregroundStyle(.secondary)

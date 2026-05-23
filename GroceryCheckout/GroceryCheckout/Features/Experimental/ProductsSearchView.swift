@@ -10,6 +10,14 @@ import SwiftUI
 
 //https://dummyjson.com/products/search?q=phone&limit=10&skip=0
 
+enum FilterType: String, Identifiable, CaseIterable {
+    case rating = "Rating"
+    case price = "Price"
+    case inventory = "Inventory"
+
+    var id: Self { self }
+}
+
 @MainActor @Observable
 final class ProductsSearchViewModel {
 
@@ -26,6 +34,27 @@ final class ProductsSearchViewModel {
 
     func clearResults() async {
         searchResults = []
+    }
+
+    func filterResult(type: FilterType) async {
+        switch type {
+
+        case .rating:
+            searchResults = searchResults.sorted {
+                $0.rating < $1.rating
+            }
+            break;
+        case .price:
+            searchResults = searchResults.sorted {
+                $0.price < $1.price
+            }
+            break
+        case .inventory:
+            searchResults = searchResults.sorted {
+                $0.stock < $1.stock
+            }
+            break;
+        }
     }
 
     func getSearchResults(query: String) async {
@@ -49,56 +78,82 @@ final class ProductsSearchViewModel {
 struct ProductsSearchView: View {
 
     @State var vm: ProductsSearchViewModel = ProductsSearchViewModel()
+    //@State var pickerSelection:FilterType = .rating
 
     var body: some View {
 
-        VStack {
-            TextField("Search", text: $vm.searchQuery)
-                .onChange(of: vm.searchQuery) {
-                    print("Search Query = \(vm.searchQuery)")
+        NavigationStack {
+
+            VStack {
+                HStack(spacing: 10) {
+                    TextField("Search", text: $vm.searchQuery)
+                        .onChange(of: vm.searchQuery) {
+                            print("Search Query = \(vm.searchQuery)")
+                        }
+                        .backgroundStyle(.white)
+
+                    Button("Rate") {
+                        Task {
+                            await vm.filterResult(type: .rating)
+                        }
+                    }
+                    Button("Price") {
+                        Task {
+                            await vm.filterResult(type: .price)
+                        }
+                    }
+                    Button("Stock") {
+                        Task {
+                            await vm.filterResult(type: .inventory)
+                        }
+                    }
+                }
+                .padding()
+
+                if vm.isLoading {
+                    ProgressView()
+                } else {
+                    List(vm.searchResults) { product in
+                        NavigationLink(value: product) {
+                            ProductsListRowView(product: product)
+                        }
+                    }
+                }
+            }
+            .navigationDestination(
+                for: Product.self,
+                destination: { prod in
+                    ProductsListDetailView(product: prod)
+                }
+            )
+            .task(id: vm.searchQuery) {
+
+                // Trim or normalize if you like
+                let query = vm.searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
+
+                // Ignore empty queries if that’s your UX
+                guard !query.isEmpty else {
+                    await vm.clearResults()
+                    return
                 }
 
-            Button("Search") {
-                Task {
+                do {
+                    try await Task.sleep(nanoseconds: 500_000_000)
+                    print("Search called for query = \(vm.searchQuery)")
                     await vm.getSearchResults(query: vm.searchQuery)
+                } catch {
+                    //print("Query Search Cancelled")
                 }
             }
-
-            if vm.isLoading {
-                ProgressView()
-            } else {
-                List(vm.searchResults) { product in
-                    Text(product.title)
+            .alert("Error", isPresented: $vm.isShowError) {
+                Button("Retry") {
+                    Task {
+                        await vm.getSearchResults(query: vm.searchQuery)
+                    }
                 }
+            } message: {
+                Text("\(vm.errorStr)")
             }
-        }
-        .task(id: vm.searchQuery) {
-
-            // Trim or normalize if you like
-            let query = vm.searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
-
-            // Ignore empty queries if that’s your UX
-            guard !query.isEmpty else {
-                await vm.clearResults()
-                return
-            }
-
-            do {
-                try await Task.sleep(nanoseconds: 500_000_000)
-                print("Search called for query = \(vm.searchQuery)")
-                await vm.getSearchResults(query: vm.searchQuery)
-            } catch {
-                //print("Query Search Cancelled")
-            }
-        }
-        .alert("Error", isPresented: $vm.isShowError) {
-            Button("Retry") {
-                Task {
-                    await vm.getSearchResults(query: vm.searchQuery)
-                }
-            }
-        } message: {
-            Text("\(vm.errorStr)")
         }
     }
 }
