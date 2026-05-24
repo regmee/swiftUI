@@ -6,15 +6,34 @@
 //
 
 import SwiftUI
+import Observation
 
 actor FavoriteStore {
-    func getFavState(prod: Product) async -> Bool {
+    func getFavState(prod: Product) -> Bool {
         UserDefaults.standard.bool(forKey: "\(prod.id)")
     }
 
-    func setFavState(prod: Product, state: Bool) async {
+    func setFavState(prod: Product, state: Bool) {
         UserDefaults.standard.set(state, forKey: "\(prod.id)")
         print("Product Id = \(prod.id) set to \(state)")
+    }
+}
+
+@Observable
+final class FavoriteStoreViewModel {
+
+    private let store: FavoriteStore
+
+    init(store: FavoriteStore) {
+        self.store = store
+    }
+
+    func getFavState(prod: Product) async -> Bool {
+        await self.store.getFavState(prod: prod)
+    }
+
+    func setFavState(prod: Product, state: Bool) async {
+        await self.store.setFavState(prod: prod, state: state)
     }
 }
 
@@ -22,8 +41,8 @@ struct ProductsListDetailView: View {
 
     let product: Product
     @State var isProductFav: Bool = false
+    @Environment(FavoriteStoreViewModel.self) private var favoriteStore
 
-    var favoriteStore: FavoriteStore = FavoriteStore()
     func toggleFavorite() {
         Task {
             let newValue = !isProductFav

@@ -11,9 +11,12 @@ import SwiftUI
 
 @main
 struct GroceryCheckoutApp: App {
+    @State private var favoriteStore:FavoriteStoreViewModel = FavoriteStoreViewModel(store: FavoriteStore())
+
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(favoriteStore)
         }
     }
 }
