@@ -1,0 +1,8 @@
+# Gradle build output — all modules (shared/build/, build/)
+build/
+
+# Gradle local cache and daemon files
+.gradle/
+
+# Local machine config (never commit)
+local.properties
