@@ -44,7 +44,7 @@ final class ProductsViewModel {
         Task {
             do {
                 // fetchProducts() bridges from Kotlin `suspend fun` via ObjC async
-                products = try await repository.fetchProducts() as! [Product]
+                products = try await repository.fetchProducts() 
                 isLoading = false
             } catch {
                 errorMessage = error.localizedDescription
