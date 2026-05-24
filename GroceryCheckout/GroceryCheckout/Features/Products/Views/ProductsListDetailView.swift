@@ -7,34 +7,75 @@
 
 import SwiftUI
 
+actor FavoriteStore {
+    func getFavState(prod: Product) async -> Bool {
+        UserDefaults.standard.bool(forKey: "\(prod.id)")
+    }
+
+    func setFavState(prod: Product, state: Bool) async {
+        UserDefaults.standard.set(state, forKey: "\(prod.id)")
+        print("Product Id = \(prod.id) set to \(state)")
+    }
+}
+
 struct ProductsListDetailView: View {
 
     let product: Product
+    @State var isProductFav: Bool = false
+
+    var favoriteStore: FavoriteStore = FavoriteStore()
+    func toggleFavorite() {
+        Task {
+            let newValue = !isProductFav
+            // Update UI state immediately
+            isProductFav = newValue
+            // Persist to store
+            await favoriteStore.setFavState(prod: product, state: newValue)
+        }
+    }
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                AsyncImage(url: URL(string: product.thumbnail)) { phase in
-                    switch phase {
-                    case .empty:
-                        ProgressView()
-                            .frame(maxWidth: .infinity, minHeight: 240)
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .scaledToFit()
-                            .frame(maxWidth: .infinity)
-                    case .failure:
-                        Image(systemName: "photo")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(maxWidth: .infinity, minHeight: 240)
-                            .foregroundStyle(.secondary)
-                    @unknown default:
-                        EmptyView()
+                ZStack {
+
+                    AsyncImage(url: URL(string: product.thumbnail)) { phase in
+                        switch phase {
+                            case .empty:
+                                ProgressView()
+                                    .frame(maxWidth: .infinity, minHeight: 240)
+                            case .success(let image):
+                                image
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(maxWidth: .infinity)
+                            case .failure:
+                                Image(systemName: "photo")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(maxWidth: .infinity, minHeight: 240)
+                                    .foregroundStyle(.secondary)
+                            @unknown default:
+                                EmptyView()
+                        }
                     }
+                    .cornerRadius(12)
+
+                    Button {
+                        self.toggleFavorite()
+                    } label: {
+                        Image(
+                            systemName: isProductFav ? "heart.fill" : "heart"
+                        )
+                        .frame(width: 200, height: 200)
+                        .foregroundColor(isProductFav ? .red : .blue)
+                        .font(.title2)
+                        .padding(8)
+                        .background(Color(.systemBackground).opacity(0.8))
+                        .clipShape(Circle())
+                    }
+                    .buttonStyle(.plain)
                 }
-                .cornerRadius(12)
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text(product.title)
@@ -62,6 +103,10 @@ struct ProductsListDetailView: View {
         }
         .navigationTitle(product.title)
         .navigationBarTitleDisplayMode(.inline)
+        .task {
+            // Initialize favorite state when the view appears
+            isProductFav = await favoriteStore.getFavState(prod: product)
+        }
     }
 }
 
@@ -87,10 +132,15 @@ private struct DetailRow: View {
 
 #Preview {
     NavigationStack {
-        ProductsListDetailView(product: Product(
-            id: 1, title: "Essence Mascara Lash Princess", description: "The Essence Mascara Lash Princess is a popular mascara known for its volumizing and lengthening effects.",
-            category: "beauty", price: 9.99, rating: 4.94,
-            stock: 5, brand: "Essence", thumbnail: "https://cdn.dummyjson.com/products/images/beauty/Essence%20Mascara%20Lash%20Princess/thumbnail.png"
-        ))
+        ProductsListDetailView(
+            product: Product(
+                id: 1, title: "Essence Mascara Lash Princess",
+                description:
+                    "The Essence Mascara Lash Princess is a popular mascara known for its volumizing and lengthening effects.",
+                category: "beauty", price: 9.99, rating: 4.94,
+                stock: 5, brand: "Essence",
+                thumbnail:
+                    "https://cdn.dummyjson.com/products/images/beauty/Essence%20Mascara%20Lash%20Princess/thumbnail.png"
+            ))
     }
 }

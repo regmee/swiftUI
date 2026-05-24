@@ -126,6 +126,10 @@ struct ProductsSearchView: View {
                     ProductsListDetailView(product: prod)
                 }
             )
+            .task {
+                // initially load 'Phone' search
+                await vm.getSearchResults(query: "Phone")
+            }
             .task(id: vm.searchQuery) {
 
                 // Trim or normalize if you like
