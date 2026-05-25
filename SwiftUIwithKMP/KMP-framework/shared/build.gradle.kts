@@ -17,7 +17,7 @@ kotlin {
     listOf(iosArm64(), iosSimulatorArm64()).forEach { target ->
         target.binaries.framework {
             baseName = "shared"
-            isStatic = true   // Static = no Embed Frameworks phase needed in Xcode
+            isStatic = false   // Static = no Embed Frameworks phase needed in Xcode
             xcf.add(this)
         }
     }

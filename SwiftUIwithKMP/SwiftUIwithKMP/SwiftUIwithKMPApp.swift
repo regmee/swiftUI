@@ -11,9 +11,15 @@ import SwiftUI
 
 @main
 struct SwiftUIwithKMPApp: App {
+
+    @State var favoriteVM: FavoriteStoreViewModel = FavoriteStoreViewModel( favStore: FavoriteStore())
+    @State var cartManagerViewModel: CartManagerViewModel = CartManagerViewModel(cartManager: CartManager())
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ProductsListView()
+                .environment(favoriteVM)
+                .environment(cartManagerViewModel)
         }
     }
 }

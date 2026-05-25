@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "uml-mcp": {
+      "type": "stdio",
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/Users/danfelabs4/Documents/GitHub/flutter/q_trade_flutter/mcp/uml-mcp",
+        "run",
+        "python",
+        "server.py"
+      ],
+      "env": {
+        "KROKI_SERVER": "https://kroki.io",
+        "MCP_OUTPUT_DIR": "/Users/danfelabs4/Documents/GitHub/swiftUI/SwiftUIwithKMP/mcp/uml-mcp/output",
+        "MCP_DIAGRAM_FALLBACK": "true"
+      }
+    }
+  }
+}
