@@ -11,9 +11,13 @@ import SwiftUI
 
 @main
 struct Groc2AppApp: App {
+
+    @State var favManager: FavoriteManager = FavoriteManager()
+
     var body: some Scene {
         WindowGroup {
             RootView()
+                .environment(favManager)
         }
     }
 }
